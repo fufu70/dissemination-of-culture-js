@@ -2,8 +2,7 @@
 const HEIGHT = process.argv[2] != undefined ? process.argv[2] : 5;
 const WIDTH = process.argv[2] != undefined ? process.argv[2] : 5;
 const ITERATIONS = process.argv[3] != undefined ? process.argv[3] : 100;
-const MAX_MATCH = process.argv[4] != undefined ? process.argv[4] : 2;
-
+const MAX_MATCH = process.argv[4] != undefined ? process.argv[4] : 6;
 
 /**
  * Returns a random integer between min and max
@@ -39,42 +38,53 @@ function generateCulture()
 }
 
 /**
- * Sets up a board with a host of cultures.
- * @return {Array} An array with a host of cultures in a HEIGHTxWIDTH array
+ * Creates a node with a maxMatch and a culture.
+ * @return {Object} An object with culture and maxMatch.
  */
-function generateCultureSet()
-{
-    var cultures = [];
-
-    runFuncNumTimes(HEIGHT, () => {
-        var rowOfCultures = [];
-        runFuncNumTimes(WIDTH, () => {
-            rowOfCultures.push(generateCulture());
-        });
-        cultures.push(rowOfCultures);
-    });
-
-    return cultures;
+function generateNode() {
+    return {
+        culture: generateCulture(),
+        maxMatch: MAX_MATCH
+    };
 }
 
 /**
- * Alters cultures randomly from one neighbor.
+ * Sets up a board with a host of nodes.
+ * @return {Array} An array with a host of nodes in a HEIGHTxWIDTH array
+ */
+function generateNodeSet()
+{
+    var nodes = [];
+
+    runFuncNumTimes(HEIGHT, () => {
+        var rowOfNodes = [];
+        runFuncNumTimes(WIDTH, () => {
+            rowOfNodes.push(generateNode());
+        });
+        nodes.push(rowOfNodes);
+    });
+
+    return nodes;
+}
+
+/**
+ * Alters the culture of nodes randomly from one node to one of its random neighbors.
  * @return {Array} altered culture
  */
-function alterCulturesRandomly(cultures)
+function alterCulturesRandomly(nodes)
 {
-    var randomCultureHeight = getRandomInt(0, HEIGHT - 1);
-    var randomCultureWidth = getRandomInt(0, WIDTH - 1);
-    var randomCulture = cultures[randomCultureHeight][randomCultureWidth];
+    var randomNodeHeight = getRandomInt(0, HEIGHT - 1);
+    var randomNodeWidth = getRandomInt(0, WIDTH - 1);
+    var randomNode = nodes[randomNodeHeight][randomNodeWidth];
 
-    var randomNeighborLocation = getRandomNeighborLocation(cultures, randomCultureHeight, randomCultureWidth);
-    var randomNeighbor = cultures[randomNeighborLocation[0]][randomNeighborLocation[1]];
-    if (getNeighborMinMatch(randomCulture, randomNeighbor) <= MAX_MATCH)
+    var randomNeighborLocation = getRandomNeighborLocation(nodes, randomNodeHeight, randomNodeWidth);
+    var randomNeighbor = nodes[randomNeighborLocation[0]][randomNeighborLocation[1]];
+    if (getNeighborMinMatch(randomNode, randomNeighbor) <= randomNode.maxMatch)
     {
-        cultures[randomNeighborLocation[0]][randomNeighborLocation[1]] = alterNeighbor(randomCulture, randomNeighbor);
+        nodes[randomNeighborLocation[0]][randomNeighborLocation[1]].culture = alterNeighbor(randomNode.culture, randomNeighbor.culture);
     }
 
-    return cultures;
+    return nodes;
 }
 
 /**
@@ -111,9 +121,9 @@ function getNeighborMinMatch(culture, neighborCulture)
  * 
  * @return {array} Height and width of the neighbor respectively
  */
-function getRandomNeighborLocation(cultures, neighborHeight, neighborWidth)
+function getRandomNeighborLocation(nodes, nodeHeight, nodeWidth)
 {
-    var locations = getAllNeighbors(cultures, neighborHeight, neighborWidth);
+    var locations = getAllNeighbors(nodes, nodeHeight, nodeWidth);
     return locations[getRandomInt(0, locations.length - 1)];
 }
 
@@ -121,18 +131,18 @@ function getRandomNeighborLocation(cultures, neighborHeight, neighborWidth)
  * Gets all of the neighbors around a specific culture.
  * @return {array} An array of height and width locations around the culture.
  */
-function getAllNeighbors(cultures, cultureHeight, cultureWidth)
+function getAllNeighbors(nodes, nodeHeight, nodeWidth)
 {
     var locations = [];
     for (var i = -1; i < 2; i ++)
     {
         for (var j = -1; j < 2; j ++)
         {
-            if (!(i + cultureHeight < 0 || j + cultureWidth < 0) &&
-                !(i + cultureHeight == cultureHeight && j + cultureWidth == cultureWidth) &&
-                !(i + cultureHeight >= HEIGHT || j + cultureWidth >= WIDTH))
+            if (!(i + nodeHeight < 0 || j + nodeWidth < 0) &&
+                !(i + nodeHeight == nodeHeight && j + nodeWidth == nodeWidth) &&
+                !(i + nodeHeight >= HEIGHT || j + nodeWidth >= WIDTH))
             {
-                locations.push([i + cultureHeight, j + cultureWidth]);   
+                locations.push([i + nodeHeight, j + nodeWidth]);   
             }
         }
     }
@@ -140,10 +150,21 @@ function getAllNeighbors(cultures, cultureHeight, cultureWidth)
     return locations;
 }
 
-var c = generateCultureSet();
+var c = generateNodeSet();
 for (var iteration = 0; iteration < ITERATIONS; iteration ++)
 {
     c = alterCulturesRandomly(c);
 }
 
-console.log(c);
+var str = "";
+
+for (var i = 0; i < c.length; i ++)
+{
+    for (var j = 0; j < c[i].length; j ++)
+    {
+        str += ", [" + c[i][j].culture + "] "
+    }
+    str += "\n";
+}
+
+console.log(str);
