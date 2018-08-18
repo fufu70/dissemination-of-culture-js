@@ -2,7 +2,7 @@
 const HEIGHT = process.argv[2] != undefined ? process.argv[2] : 5;
 const WIDTH = process.argv[2] != undefined ? process.argv[2] : 5;
 const ITERATIONS = process.argv[3] != undefined ? process.argv[3] : 100;
-const MAX_MATCH = process.argv[4] != undefined ? process.argv[4] : 6;
+const MAX_MATCH = process.argv[4] != undefined ? process.argv[4] : 10;
 
 /**
  * Returns a random integer between min and max
@@ -44,7 +44,7 @@ function generateCulture()
 function generateNode() {
     return {
         culture: generateCulture(),
-        maxMatch: MAX_MATCH
+        maxMatch: getRandomInt(0, MAX_MATCH)
     };
 }
 
@@ -73,15 +73,15 @@ function generateNodeSet()
  */
 function alterCulturesRandomly(nodes)
 {
-    var randomNodeHeight = getRandomInt(0, HEIGHT - 1);
-    var randomNodeWidth = getRandomInt(0, WIDTH - 1);
-    var randomNode = nodes[randomNodeHeight][randomNodeWidth];
+    var nodeHeight = getRandomInt(0, HEIGHT - 1);
+    var nodeWidth = getRandomInt(0, WIDTH - 1);
+    var node = nodes[nodeHeight][nodeWidth];
 
-    var randomNeighborLocation = getRandomNeighborLocation(nodes, randomNodeHeight, randomNodeWidth);
-    var randomNeighbor = nodes[randomNeighborLocation[0]][randomNeighborLocation[1]];
-    if (getNeighborMinMatch(randomNode, randomNeighbor) <= randomNode.maxMatch)
+    var neighborLocation = getRandomNeighborLocation(nodes, nodeHeight, nodeWidth);
+    var neighbor = nodes[neighborLocation[0]][neighborLocation[1]];
+    if (getNeighborMinMatch(node, neighbor) <= Math.min(neighbor.maxMatch, node.maxMatch))
     {
-        nodes[randomNeighborLocation[0]][randomNeighborLocation[1]].culture = alterNeighbor(randomNode.culture, randomNeighbor.culture);
+        nodes[neighborLocation[0]][neighborLocation[1]].culture = alterNeighbor(node.culture, neighbor.culture);
     }
 
     return nodes;
@@ -160,11 +160,12 @@ var str = "";
 
 for (var i = 0; i < c.length; i ++)
 {
+    var rowStr = [];
     for (var j = 0; j < c[i].length; j ++)
     {
-        str += ", [" + c[i][j].culture + "] "
+        rowStr.push("[" + c[i][j].culture + "] + " + c[i][j].maxMatch)
     }
-    str += "\n";
+    str += rowStr.join(',') + "\n";
 }
 
 console.log(str);
