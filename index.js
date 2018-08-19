@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-const HEIGHT = process.argv[2] != undefined ? process.argv[2] : 5;
-const WIDTH = process.argv[2] != undefined ? process.argv[2] : 5;
-const ITERATIONS = process.argv[3] != undefined ? process.argv[3] : 100;
-const MIN_MATCH = process.argv[4] != undefined ? process.argv[4] : 0;
-const MAX_MATCH = process.argv[4] != undefined ? process.argv[5] : 10;
+const HEIGHT = Number(process.argv[2] != undefined ? process.argv[2] : 5);
+const WIDTH = Number(process.argv[2] != undefined ? process.argv[2] : 5);
+const ITERATIONS = Number(process.argv[3] != undefined ? process.argv[3] : 100);
+const MIN_MATCH = Number(process.argv[4] != undefined ? process.argv[4] : 0);
+const MAX_MATCH = Number(process.argv[5] != undefined ? process.argv[5] : 10);
 
 /**
  * Returns a random integer between min and max
@@ -129,7 +129,7 @@ function getRandomNeighborLocation(nodes, nodeHeight, nodeWidth)
 }
 
 /**
- * Gets all of the neighbors around a specific culture.
+ * Gets all of the neighbors around a specific culture. The culture 
  * @return {array} An array of height and width locations around the culture.
  */
 function getAllNeighbors(nodes, nodeHeight, nodeWidth)
@@ -139,11 +139,9 @@ function getAllNeighbors(nodes, nodeHeight, nodeWidth)
     {
         for (var j = -1; j < 2; j ++)
         {
-            if (!(i + nodeHeight < 0 || j + nodeWidth < 0) &&
-                !(i + nodeHeight == nodeHeight && j + nodeWidth == nodeWidth) &&
-                !(i + nodeHeight >= HEIGHT || j + nodeWidth >= WIDTH))
+            if (!(i + nodeHeight == nodeHeight && j + nodeWidth == nodeWidth))
             {
-                locations.push([i + nodeHeight, j + nodeWidth]);   
+                locations.push([(nodeHeight + i + HEIGHT) % HEIGHT, (nodeWidth + j + WIDTH) % WIDTH]);
             }
         }
     }
