@@ -2,7 +2,8 @@
 const HEIGHT = process.argv[2] != undefined ? process.argv[2] : 5;
 const WIDTH = process.argv[2] != undefined ? process.argv[2] : 5;
 const ITERATIONS = process.argv[3] != undefined ? process.argv[3] : 100;
-const MAX_MATCH = process.argv[4] != undefined ? process.argv[4] : 10;
+const MIN_MATCH = process.argv[4] != undefined ? process.argv[4] : 0;
+const MAX_MATCH = process.argv[4] != undefined ? process.argv[5] : 10;
 
 /**
  * Returns a random integer between min and max
@@ -44,7 +45,7 @@ function generateCulture()
 function generateNode() {
     return {
         culture: generateCulture(),
-        maxMatch: getRandomInt(0, MAX_MATCH)
+        maxMatch: getRandomInt(MIN_MATCH, MAX_MATCH)
     };
 }
 
@@ -163,7 +164,7 @@ for (var i = 0; i < c.length; i ++)
     var rowStr = [];
     for (var j = 0; j < c[i].length; j ++)
     {
-        rowStr.push("[" + c[i][j].culture + "] + " + c[i][j].maxMatch)
+        rowStr.push(" [" + c[i][j].culture + "] + " + c[i][j].maxMatch) + " "
     }
     str += rowStr.join(',') + "\n";
 }

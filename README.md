@@ -22,10 +22,16 @@ To increase the amount of iterations (by default the iteration amount is 100) si
 $ node index.js 5 1000
 ```
 
-To make the culture matchmaking more flexible, simply increase the max match value in the third parameter. By default the max match value is 1, the maximum match value possible is 10.
+To make the culture matchmaking more flexible, simply increase the min match value in the third parameter. By default the min match value is 0, the maximum match value possible is 10.
 
 ```
 $ node index.js 5 1000 3
+```
+
+To make the culture matchmaking more flexible, simply increase the max match value in the third parameter. By default the max match value is 10, the maximum match value possible is 10.
+
+```
+$ node index.js 5 1000 3 6
 ```
 
 ## Requirements
