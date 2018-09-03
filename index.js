@@ -162,7 +162,7 @@ for (var i = 0; i < c.length; i ++)
     var rowStr = [];
     for (var j = 0; j < c[i].length; j ++)
     {
-        rowStr.push(" [" + c[i][j].culture + "] + " + c[i][j].maxMatch) + " "
+        rowStr.push(" [" + c[i][j].culture.join(" ") + "] + " + c[i][j].maxMatch) + " "
     }
     str += rowStr.join(',') + "\n";
 }
