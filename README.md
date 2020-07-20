@@ -36,4 +36,4 @@ $ node index.js 5 1000 3 6
 
 ## Requirements
 
-This project uses (node)[https://nodejs.org/en/].
+This project uses [node](https://nodejs.org/en/).
